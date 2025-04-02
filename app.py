@@ -32,3 +32,9 @@ student_response = st.text_input("Enter student response:")
 if student_response:
     predicted_grade = predict_grade(student_response)
     st.write(f"Predicted Grade: {predicted_grade}")
+
+import os
+
+model_dir = os.path.join(os.getcwd(), "grading_model")
+model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+tokenizer = AutoTokenizer.from_pretrained(model_dir)
