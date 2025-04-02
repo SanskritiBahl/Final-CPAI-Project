@@ -1,6 +1,6 @@
-transformers==4.28.1
-datasets==2.12.0
-torch==2.1.0
-scikit-learn==1.2.2
-pandas==1.5.3
-numpy==1.24.2
+transformers
+datasets
+torch
+scikit-learn
+pandas
+numpy
