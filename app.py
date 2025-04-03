@@ -41,16 +41,6 @@ st.title("Grading Prediction Model")
 # Upload CSV dataset
 uploaded_file = st.file_uploader("Upload your behavioral economics dataset (.csv)", type="csv")
 
-# Display images (ensure paths are correct or upload via file uploader)
-teacher_image = "path_to_teacher_image.jpg"  # Replace with actual image URL or path
-student_image = "path_to_student_image.jpg"  # Replace with actual image URL or path
-
-col1, col2 = st.columns(2)
-with col1:
-    st.image(teacher_image, caption="Teacher", width=150)  # Teacher image
-with col2:
-    st.image(student_image, caption="Student", width=150)  # Student image
-
 # Show dataset preview if the file is uploaded
 if uploaded_file is not None:
     # Load the dataset into a DataFrame
