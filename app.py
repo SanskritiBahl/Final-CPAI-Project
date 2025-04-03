@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
 import os
@@ -13,17 +14,30 @@ def load_model():
     tokenizer = AutoTokenizer.from_pretrained(model_dir)
     return model, tokenizer
 
-# List of concepts
+# Streamlit UI
+st.title("Grading Prediction Model")
+
+# Upload CSV dataset
+uploaded_file = st.file_uploader("Upload your behavioral economics dataset (.csv)", type="csv")
+
+if uploaded_file is not None:
+    # Load the dataset into a DataFrame
+    df = pd.read_csv(uploaded_file)
+    st.write("Dataset Preview:")
+    st.dataframe(df.head())  # Display first few rows of the uploaded dataset
+    
+    # Check if necessary columns are present in the dataset
+    if "Student_Response" not in df.columns or "Faculty_Grade" not in df.columns:
+        st.error("The dataset must contain 'Student_Response' and 'Faculty_Grade' columns!")
+        st.stop()
+
+# Dropdown for concept selection
 concepts = [
     "Endowment Effect", "Anchoring Bias", "Hyperbolic Discounting", "Loss Aversion", 
     "Framing Effect", "Status Quo Bias", "Mental Accounting", "Sunk Cost Fallacy", 
     "Prospect Theory", "Nudging"
 ]
 
-# Streamlit UI
-st.title("Grading Prediction Model")
-
-# Dropdown for concept selection
 concept = st.selectbox("Select Concept", concepts)
 
 # Input box for student response
@@ -54,3 +68,25 @@ if student_response:
     if st.button('Predict Grade'):
         predicted_grade = predict_grade(student_response)
         st.write(f"Predicted Grade for {concept}: {predicted_grade}")
+
+# After the dataset is uploaded, allow the user to trigger the predictions
+if uploaded_file is not None and st.button('Predict Grades for All Responses'):
+    st.write("Predicting grades for the entire dataset...")
+
+    # Ensure the dataset has the necessary columns
+    if "Student_Response" in df.columns:
+        predictions = []
+        for index, row in df.iterrows():
+            response = row["Student_Response"]
+            grade = predict_grade(response)
+            predictions.append(grade)
+        
+        # Add predictions to the DataFrame
+        df["Predicted_Grade"] = predictions
+        
+        # Show the updated dataframe with predictions
+        st.write("Predictions Completed. Here is the updated dataset with predicted grades:")
+        st.dataframe(df)
+
+    else:
+        st.error("The dataset must contain the 'Student_Response' column!")
