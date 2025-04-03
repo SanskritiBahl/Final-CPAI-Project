@@ -5,7 +5,7 @@ import os
 
 # Function to load the model and tokenizer from a local directory
 def load_model():
-    model_dir = "/home/ashok/grading_model"  # Make sure this is the correct path to your model directory
+    model_dir = "./grading_model"  # Make sure this is the correct path to your model directory
 
     # Check if the model directory exists
     if not os.path.exists(model_dir):
