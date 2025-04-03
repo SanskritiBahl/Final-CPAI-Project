@@ -5,19 +5,29 @@ import os
 
 # Function to load the model and tokenizer from a local directory
 def load_model():
-    model_dir = "/home/ashok/grading_model"  # Make sure this is the correct path to your model directory
-
-    # Check if the model directory exists
+    model_dir = "/home/ashok/grading_model"  # Ensure the path is correct
     if not os.path.exists(model_dir):
-        raise ValueError(f"Model directory '{model_dir}' not found! Please ensure the model is saved correctly.")
-
-    # Load the model and tokenizer
+        raise ValueError(f"Model directory '{model_dir}' not found!")
+    
     model = AutoModelForSequenceClassification.from_pretrained(model_dir)
     tokenizer = AutoTokenizer.from_pretrained(model_dir)
     return model, tokenizer
 
+# List of concepts
+concepts = [
+    "Endowment Effect", "Anchoring Bias", "Hyperbolic Discounting", "Loss Aversion", 
+    "Framing Effect", "Status Quo Bias", "Mental Accounting", "Sunk Cost Fallacy", 
+    "Prospect Theory", "Nudging"
+]
+
 # Streamlit UI
 st.title("Grading Prediction Model")
+
+# Dropdown for concept selection
+concept = st.selectbox("Select Concept", concepts)
+
+# Input box for student response
+student_response = st.text_input("Enter student response:")
 
 # Load the model and tokenizer
 try:
@@ -25,27 +35,22 @@ try:
     st.write("Model and tokenizer loaded successfully!")
 except Exception as e:
     st.write(f"Error loading model: {e}")
-    st.stop()  # Stop execution if the model couldn't be loaded
+    st.stop()
 
-# Function to predict grade based on student response
+# Function to predict grade
 def predict_grade(student_response):
     inputs = tokenizer(student_response, return_tensors="pt", truncation=True, padding=True)
     with torch.no_grad():
         outputs = model(**inputs)
-
     predicted_class = torch.argmax(outputs.logits, dim=1).item()
-
-    # Mapping predicted class to grade
     grade_mapping_for_prediction = {
         10: "A+", 9: "A", 8: "A-", 7: "B+", 6: "B", 5: "B-", 
         4: "C+", 3: "C", 2: "C-", 1: "D", 0: "F"
     }
-
     return grade_mapping_for_prediction.get(predicted_class, "Unknown Grade")
 
-# Input field for the student response
-student_response = st.text_input("Enter student response:")
-
+# Button to predict grade
 if student_response:
-    predicted_grade = predict_grade(student_response)
-    st.write(f"Predicted Grade: {predicted_grade}")
+    if st.button('Predict Grade'):
+        predicted_grade = predict_grade(student_response)
+        st.write(f"Predicted Grade for {concept}: {predicted_grade}")
