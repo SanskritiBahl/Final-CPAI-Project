@@ -55,6 +55,13 @@ st.image(image_path, caption="Teacher-Student Image", width=400)
 if uploaded_file is not None:
     # Load the dataset into a DataFrame
     df = pd.read_csv(uploaded_file)
+    
+    # Display Dataset Info
+    st.write("Dataset Description:")
+    st.write(df.describe())  # Description of numerical columns
+    st.write("Dataset Info:")
+    st.write(df.info())  # Information about the dataset
+
     st.write("Dataset Preview:")
     st.dataframe(df.head())  # Display first few rows of the uploaded dataset
     
