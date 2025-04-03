@@ -1,8 +1,8 @@
+import os
 import streamlit as st
 import pandas as pd
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
-import os
 
 # Function to load the model and tokenizer from a local directory
 def load_model():
@@ -40,6 +40,16 @@ st.title("Grading Prediction Model")
 
 # Upload CSV dataset
 uploaded_file = st.file_uploader("Upload your behavioral economics dataset (.csv)", type="csv")
+
+# Define the image path (Make sure the image is in the same directory as app.py)
+image_path = "teacher-student.jpg"  # Replace with the correct image file name (e.g., .jpg, .png)
+
+# Check if the image exists in the specified path
+if not os.path.exists(image_path):
+    st.error(f"Image not found: {image_path}")
+
+# Display the image on Streamlit
+st.image(image_path, caption="Teacher-Student Image", width=400)
 
 # Show dataset preview if the file is uploaded
 if uploaded_file is not None:
