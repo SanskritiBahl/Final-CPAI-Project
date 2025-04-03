@@ -67,8 +67,7 @@ if uploaded_file is not None:
 concepts = [
     "Endowment Effect", "Anchoring Bias", "Hyperbolic Discounting", "Loss Aversion", 
     "Framing Effect", "Status Quo Bias", "Mental Accounting", "Sunk Cost Fallacy", 
-    "Prospect Theory", "Nudging"
-]
+    "Prospect Theory", "Nudging"]
 
 concept = st.selectbox("Select Concept", concepts)
 
